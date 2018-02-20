@@ -1,0 +1,10 @@
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\bin\Debug\Serial Lab.exe.config
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Serial Lab.csprojResolveAssemblyReference.cache
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Seriallab.AboutBox1.resources
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Seriallab.MainForm.resources
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Seriallab.Properties.Resources.resources
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Serial Lab.csproj.GenerateResource.Cache
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\bin\Debug\Serial Lab.exe
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\bin\Debug\Serial Lab.pdb
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Serial Lab.exe
+C:\Users\Vetle\Documents\UiT Norges Arktiske Universitet\2. År\2. Semester\Programerbar elektronikk Vår2017\Serial-Lab-master\Serial Lab\obj\Debug\Serial Lab.pdb
