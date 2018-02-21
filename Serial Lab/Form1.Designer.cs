@@ -917,7 +917,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Serial Lab";
+            this.Text = "G-Chaser Serial Interface";
             this.serial_options_group.ResumeLayout(false);
             this.serial_options_group.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
