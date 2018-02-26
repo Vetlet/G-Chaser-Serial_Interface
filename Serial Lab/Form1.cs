@@ -18,7 +18,6 @@ namespace Seriallab
     public partial class MainForm : Form
     {
         public string data{ get; set; }
-        int graph_scaler = 500;
         bool plotter_flag = false;
         System.IO.StreamWriter out_file;
         public MainForm()
@@ -38,9 +37,6 @@ namespace Seriallab
             mySerial.DataReceived += rx_data_event;
             backgroundWorker1.DoWork += new DoWorkEventHandler(update_rxtextarea_event);
             tabControl1.Selected += new TabControlEventHandler(tabControl1_Selecting);
-
-            for (int i = 0; i < 5 && i < 5; i++)
-                graph.Series[i].Points.Add(0);
 
         }
 
@@ -128,25 +124,14 @@ namespace Seriallab
                         {
                             if (display_hex_radiobutton.Checked)
                                 data = BitConverter.ToString(dataRecevied);
-
-                            backgroundWorker1.RunWorkerAsync();
+                                backgroundWorker1.RunWorkerAsync();     
                         }
 
                         else if (plotter_flag)
                         {
-                            double number;
                             string[] variables = data.Split('\n')[0].Split(',');
-                            for (int i = 0; i < variables.Length && i < 5; i++)
-                            {
-                                if (double.TryParse(variables[i], out number))
-                                {
-                                    if (graph.Series[i].Points.Count > graph_scaler)
-                                        graph.Series[i].Points.RemoveAt(0);
-                                    graph.Series[i].Points.Add(number);
-                                }
-                            }
-                            graph.ResetAutoValues();
                         }
+
                     }));
                 }
                 catch { alert("Can't read form  " + mySerial.PortName + " port it might be opennd in another program"); }
@@ -160,7 +145,7 @@ namespace Seriallab
             {
                 if (rx_textarea.Lines.Count() > 5000)
                     rx_textarea.ResetText();
-                rx_textarea.AppendText("[RX]> " + data);
+                rx_textarea.AppendText(data);
             }));
         }
 
@@ -200,75 +185,6 @@ namespace Seriallab
             rx_textarea.Clear();
         }
 
-        /* Plotter ------*/
-        private void graph_speed_ValueChanged(object sender, EventArgs e)
-        {
-            graph.ChartAreas[0].AxisY.Interval = (int)graph_speed.Value;
-        }
-        /* change graph scale*/
-        private void graph_scale_ValueChanged(object sender, EventArgs e)
-        {
-            graph_scaler = (int)graph_scale.Value;
-            for (int i = 0; i < 5; i++)
-                graph.Series[i].Points.Clear();
-        }
-        /* set graph max value*/
-        private void set_graph_max_enable_CheckedChanged(object sender, EventArgs e)
-        {
-            if (set_graph_max_enable.Checked)
-                try
-                {
-                    graph_max.Value = (int)graph.ChartAreas[0].AxisY.Maximum;
-                    graph.ChartAreas[0].AxisY.Maximum = (int)graph_max.Value;
-                }
-                catch {alert("Invalid Minimum value");}
-            else
-                graph.ChartAreas[0].AxisY.Maximum = Double.NaN;
-
-            graph_max.Enabled = set_graph_max_enable.Checked;
-        }
-        private void graph_max_ValueChanged(object sender, EventArgs e)
-        {
-            if (graph_max.Value > graph_min.Value)
-                graph.ChartAreas[0].AxisY.Maximum = (int)graph_max.Value;
-            else
-                alert("Invalid Maximum value");
-        }
-        /* set graph min value*/
-        private void set_graph_min_enable_CheckedChanged(object sender, EventArgs e)
-        {
-            if (set_graph_min_enable.Checked)
-                try
-                {
-                    graph_min.Value = (int)graph.ChartAreas[0].AxisY.Minimum;
-                    graph.ChartAreas[0].AxisY.Minimum = (int)graph_min.Value;
-                }
-                catch { alert("Invalid Minimum value"); }
-            else
-                graph.ChartAreas[0].AxisY.Minimum = Double.NaN;
-
-            graph_min.Enabled = set_graph_min_enable.Checked;
-        }
-        private void graph_min_ValueChanged(object sender, EventArgs e)
-        {
-            if (graph_min.Value < graph_max.Value)
-                graph.ChartAreas[0].AxisY.Minimum = (int)graph_min.Value;
-            else
-                alert("Invalid Minimum value");
-        }
-        /* save graph as image*/
-        private void saveAsImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                graph.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
-        }
-        /*clear graph*/
-        private void clear_graph_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 5; i++)
-                graph.Series[i].Points.Clear();
-        }
-
         /*Application-----*/
         /*serial port config*/
         private bool Serial_port_config()
@@ -283,7 +199,6 @@ namespace Seriallab
         {
             serial_options_group.Enabled = !value;
             datalogger_options_panel.Enabled = !value;
-            write_options_group.Enabled = value;
 
             if (value)
             {
@@ -341,7 +256,6 @@ namespace Seriallab
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            tx_terminal.Clear();
         }
 
         private void graph_Click(object sender, EventArgs e)
