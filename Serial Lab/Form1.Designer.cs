@@ -143,7 +143,7 @@
             this.portConfig.Name = "portConfig";
             this.portConfig.Size = new System.Drawing.Size(76, 21);
             this.portConfig.TabIndex = 1;
-            this.portConfig.SelectedIndexChanged += new System.EventHandler(this.portConfig_SelectedIndexChanged);
+
             this.portConfig.Click += new System.EventHandler(this.portConfig_Click);
             // 
             // baudrateConfig
@@ -795,7 +795,6 @@
             this.graph.Size = new System.Drawing.Size(550, 298);
             this.graph.TabIndex = 16;
             this.graph.Text = "chart2";
-            this.graph.Click += new System.EventHandler(this.graph_Click);
             // 
             // graph_menu
             // 

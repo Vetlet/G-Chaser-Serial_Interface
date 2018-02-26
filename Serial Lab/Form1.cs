@@ -32,7 +32,7 @@ namespace Seriallab
             portConfig.Items.AddRange(SerialPort.GetPortNames());
             baudrateConfig.DataSource = new[] { "115200", "19200", "230400", "57600", "38400", "9600", "4800" };
             portConfig.SelectedIndex = 0;
-            baudrateConfig.SelectedIndex = 5;
+            baudrateConfig.SelectedIndex = 6;
             openFileDialog1.Filter = "Text|*.txt";
 
             mySerial.DataReceived += rx_data_event;
@@ -68,6 +68,7 @@ namespace Seriallab
                         {
                             out_file = new System.IO.StreamWriter(datalogger_checkbox.Text, datalogger_append_radiobutton.Checked);
                         }
+
                         catch
                         {
                             alert("Can't open " + datalogger_checkbox.Text + " file, it might be used in another program");
@@ -115,7 +116,7 @@ namespace Seriallab
                     if (datalogger_checkbox.Checked)
                     {
                         try
-                        { out_file.Write(data.Replace("\\n", Environment.NewLine)); }
+                        { out_file.Write(data.Replace("\n", Environment.NewLine)); }
                         catch { alert("Can't write to " + datalogger_checkbox.Text + " file it might be not exist or it is opennd in another program"); return; }
                     }
 
@@ -160,7 +161,7 @@ namespace Seriallab
             {
                 if (rx_textarea.Lines.Count() > 5000)
                     rx_textarea.ResetText();
-                rx_textarea.AppendText("[RX]> " + data);
+                rx_textarea.AppendText(data);
             }));
         }
 
@@ -276,6 +277,7 @@ namespace Seriallab
             try {mySerial.PortName = portConfig.Text; }
             catch { alert("There are no available ports"); return false;}
             mySerial.BaudRate = (Int32.Parse(baudrateConfig.Text));
+
             return true;
         }
 
@@ -342,16 +344,6 @@ namespace Seriallab
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             tx_terminal.Clear();
-        }
-
-        private void graph_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void portConfig_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
   }
