@@ -6,21 +6,24 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Timers;
 using System.IO;
 
-
 namespace Seriallab
 {
     public partial class MainForm : Form
     {
-        public string data{ get; set; }
-        bool plotter_flag = false;
+        public string data { get; set; }
+        bool plotter_flag;
+        int graph_scaler = 50;
         System.IO.StreamWriter out_file;
+        //double Connect_timer; //Timer
         public MainForm()
+
         {
             InitializeComponent();
             configrations();
@@ -33,17 +36,15 @@ namespace Seriallab
             portConfig.SelectedIndex = 0;
             baudrateConfig.SelectedIndex = 5;
             openFileDialog1.Filter = "Text|*.txt";
+            plotter_flag = true;
 
             mySerial.DataReceived += rx_data_event;
             backgroundWorker1.DoWork += new DoWorkEventHandler(update_rxtextarea_event);
-            tabControl1.Selected += new TabControlEventHandler(tabControl1_Selecting);
-
         }
 
         /*connect and disconnect*/
         private void connect_Click(object sender, EventArgs e)
         {
-            /*Connect*/
             if (!mySerial.IsOpen)
             {
                 if (Serial_port_config())
@@ -63,6 +64,7 @@ namespace Seriallab
                         try
                         {
                             out_file = new System.IO.StreamWriter(datalogger_checkbox.Text, datalogger_append_radiobutton.Checked);
+
                         }
                         catch
                         {
@@ -94,7 +96,7 @@ namespace Seriallab
             }
         }
 
-        /* RX -----*/
+        /* RX ---------------------------------------------------------------------------------*/
 
         /* read data from serial */
         private void rx_data_event(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
@@ -111,27 +113,55 @@ namespace Seriallab
                     if (datalogger_checkbox.Checked)
                     {
                         try
-                        { out_file.Write(data.Replace("\\n", Environment.NewLine)); }
+                        { out_file.Write(data.Replace("\n", Environment.NewLine)); }
                         catch { alert("Can't write to " + datalogger_checkbox.Text + " file it might be not exist or it is opennd in another program"); return; }
                     }
-
 
                     this.BeginInvoke((Action)(() =>
                     {
                         data = System.Text.Encoding.Default.GetString(dataRecevied);
 
-                        if (!plotter_flag && !backgroundWorker1.IsBusy)
+                        if (plotter_flag && !backgroundWorker1.IsBusy)
                         {
                             if (display_hex_radiobutton.Checked)
                                 data = BitConverter.ToString(dataRecevied);
-                                backgroundWorker1.RunWorkerAsync();     
+                            backgroundWorker1.RunWorkerAsync();
                         }
 
                         else if (plotter_flag)
                         {
-                            string[] variables = data.Split('\n')[0].Split(',');
-                        }
+                            double plot_data;
+                            var dataBlock = data.Split('\n');
 
+                            foreach (var block in dataBlock)
+                            {
+                                var splitted_plot_data = block.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                // rt += someTime; (*)
+                                //DataPlot.Series["Series1"].Points.Clear();
+
+                                //DataPlot.Series["Series1"].Points.RemoveAt(0);
+                                for (int i = 0; i < splitted_plot_data.Length; i++)
+                                {
+                                    if (double.TryParse(splitted_plot_data[i], out plot_data))
+                                    {
+                                        DataPlot.Series["Series1"].Points.AddY(plot_data);
+
+                                        if (DataPlot.Series[i].Points.Count > graph_scaler)
+
+                                            DataPlot.Series["Series1"].Points.RemoveAt(0);
+                                        //DataPlot.Series["Series1"].Points.Add(plot_dataI32);
+                                        //DataPlot.ResetAutoValues();
+                                    }
+
+                                }
+
+                                //DataPoint dp2 = new DataPoint(x, rnd.Next(100));
+                                //DataPlot.Series[0].Points.RemoveAt(0);
+                                //DataPlot.Series[0].Points.Add(dp2);
+                                //DataPlot.ResetAutoValues();
+                                //DataPlot.Refresh();
+                            }
+                        }
                     }));
                 }
                 catch { alert("Can't read form  " + mySerial.PortName + " port it might be opennd in another program"); }
@@ -143,9 +173,14 @@ namespace Seriallab
         {
             this.BeginInvoke((Action)(() =>
             {
-                if (rx_textarea.Lines.Count() > 5000)
+                if (rx_textarea.Lines.Count() > 100)
                     rx_textarea.ResetText();
                 rx_textarea.AppendText(data);
+                /*Timer settings*/
+                //System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+                //t.Interval = 1000; // Timer interval 
+                //t.Tick += new EventHandler(timer_Tick);
+                // t.Start();
             }));
         }
 
@@ -185,12 +220,12 @@ namespace Seriallab
             rx_textarea.Clear();
         }
 
-        /*Application-----*/
+        /*Application---------------------------------------------------------------------------------*/
         /*serial port config*/
         private bool Serial_port_config()
         {
-            try {mySerial.PortName = portConfig.Text; }
-            catch { alert("There are no available ports"); return false;}
+            try { mySerial.PortName = portConfig.Text; }
+            catch { alert("There are no available ports"); return false; }
             mySerial.BaudRate = (Int32.Parse(baudrateConfig.Text));
             return true;
         }
@@ -212,15 +247,7 @@ namespace Seriallab
             }
         }
 
-        /* tabcontrol*/
-        void tabControl1_Selecting(object sender, TabControlEventArgs e)
-        {
-            if (tabControl1.SelectedIndex == 2)
-                plotter_flag = true;
-            else
-                plotter_flag = false;
-        }
-        /* Search for available serial ports */
+        /*Search for available serial ports*/
         private void portConfig_Click(object sender, EventArgs e)
         {
             portConfig.Items.Clear();
@@ -239,7 +266,7 @@ namespace Seriallab
             AboutBox1 a = new AboutBox1();
             a.ShowDialog();
         }
-        /* Close serial port when closing*/
+        /*Close serial port when closing*/
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (mySerial.IsOpen)
@@ -249,23 +276,9 @@ namespace Seriallab
         private int file_size(string path)
         {
             var file = new StreamReader(path).ReadToEnd();
-            string [] lines = file.Split(new char[] { '\n' });
+            string[] lines = file.Split(new char[] { '\n' });
             int count = lines.Count();
             return count;
         }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void graph_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void portConfig_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
-  }
+}

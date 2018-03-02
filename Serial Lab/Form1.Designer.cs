@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.connect = new System.Windows.Forms.Button();
             this.portConfig = new System.Windows.Forms.ComboBox();
@@ -65,6 +68,9 @@
             this.display_string_radiobutton = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.DataPlot = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label1 = new System.Windows.Forms.Label();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.serial_options_group.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -76,6 +82,7 @@
             this.read_options_group.SuspendLayout();
             this.dsiplayas_options_panel.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataPlot)).BeginInit();
             this.SuspendLayout();
             // 
             // connect
@@ -96,7 +103,6 @@
             this.portConfig.Name = "portConfig";
             this.portConfig.Size = new System.Drawing.Size(76, 21);
             this.portConfig.TabIndex = 1;
-            this.portConfig.SelectedIndexChanged += new System.EventHandler(this.portConfig_SelectedIndexChanged);
             this.portConfig.Click += new System.EventHandler(this.portConfig_Click);
             // 
             // baudrateConfig
@@ -148,7 +154,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 591);
             this.statusStrip1.MinimumSize = new System.Drawing.Size(569, 25);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(606, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(1196, 25);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -200,7 +206,6 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(101, 22);
             this.toolStripMenuItem1.Text = "Clear";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // graph_menu
             // 
@@ -393,12 +398,40 @@
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tabControl1.TabIndex = 14;
             // 
+            // DataPlot
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.DataPlot.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.DataPlot.Legends.Add(legend1);
+            this.DataPlot.Location = new System.Drawing.Point(596, 191);
+            this.DataPlot.Name = "DataPlot";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.DataPlot.Series.Add(series1);
+            this.DataPlot.Size = new System.Drawing.Size(580, 387);
+            this.DataPlot.TabIndex = 28;
+            this.DataPlot.Text = "Data plot";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(685, 85);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 29;
+            this.label1.Text = "label1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.ClientSize = new System.Drawing.Size(606, 616);
+            this.ClientSize = new System.Drawing.Size(1196, 616);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.DataPlot);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.connect);
             this.Controls.Add(this.tabControl1);
@@ -425,6 +458,7 @@
             this.dsiplayas_options_panel.ResumeLayout(false);
             this.dsiplayas_options_panel.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataPlot)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -467,6 +501,9 @@
         private System.Windows.Forms.RadioButton display_string_radiobutton;
         private System.Windows.Forms.Label label4;
         protected System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart DataPlot;
+        private System.Windows.Forms.Label label1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
     }
 }
 
